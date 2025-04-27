@@ -1,0 +1,159 @@
+openapi: 3.0.0
+info:
+  title: BrickBuddy Piece Destinations API
+  version: '1.0.0'
+  description: API endpoints for managing piece destinations in BrickBuddy
+
+servers:
+  - url: /api
+    description: API base URL
+
+paths:
+  /piece-destinations:
+    get:
+      summary: Get piece destinations
+      description: Retrieves set and part destinations for a given lot
+      tags:
+        - Piece Destinations
+      parameters:
+        - in: query
+          name: lot_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the lot to get destinations for
+      responses:
+        '200':
+          description: Piece destinations retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      set_destinations:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: "Demo Set 1"
+                            number:
+                              type: string
+                              example: "75300-1"
+                            user_set_item_id:
+                              type: integer
+                              example: 101
+                            qty_have:
+                              type: integer
+                              example: 5
+                            user_inventory_item_location_name:
+                              type: string
+                              example: "Set Bin A"
+                            qty_to_allocate:
+                              type: integer
+                              example: 2
+                      part_destinations:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            recommended:
+                              type: boolean
+                              example: true
+                            qty_on_hand:
+                              type: integer
+                              example: 0
+                            user_inventory_item_location_id:
+                              type: integer
+                              example: 201
+                            user_inventory_item_location_name:
+                              type: string
+                              example: "Parts Drawer 5"
+                            container_available_weight:
+                              type: number
+                              format: float
+                              example: 50.5
+                  message:
+                    type: string
+                    example: "Piece destinations retrieved successfully (Demo)"
+                  action:
+                    type: string
+                    example: "RETRIEVED"
+        '400':
+          description: Bad request - Missing required parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Missing required parameter: lot_id"
+                      statusCode:
+                        type: integer
+                        example: 400
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Internal server error"
+                      statusCode:
+                        type: integer
+                        example: 500
+
+components:
+  schemas:
+    SetDestination:
+      type: object
+      properties:
+        name:
+          type: string
+        number:
+          type: string
+        user_set_item_id:
+          type: integer
+        qty_have:
+          type: integer
+        user_inventory_item_location_name:
+          type: string
+        qty_to_allocate:
+          type: integer
+    
+    PartDestination:
+      type: object
+      properties:
+        recommended:
+          type: boolean
+        qty_on_hand:
+          type: integer
+        user_inventory_item_location_id:
+          type: integer
+        user_inventory_item_location_name:
+          type: string
+        container_available_weight:
+          type: number
+          format: float
